@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">InternetShop</string>
+    <string name="user_name">Имя</string>
+    <string name="user_phone_number">Номер телефона</string>
+    <string name="user_email">Почта</string>
+    <string name="user_password">Пароль</string>
+    <string name="register">Зарегестрироваться</string>
+    <string name="registration">Регистрация</string>
+    <string name="sign_in">Войти</string>
+    <string name="signing_in">Вход</string>
+</resources>
