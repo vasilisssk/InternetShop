@@ -8,4 +8,5 @@
     <string name="registration">Регистрация</string>
     <string name="sign_in">Войти</string>
     <string name="signing_in">Вход</string>
+    <string name="or">или</string>
 </resources>

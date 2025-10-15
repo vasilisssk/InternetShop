@@ -38,6 +38,8 @@
             android:inputType="text"
             android:minWidth="250dp"
             android:minHeight="48dp" />
+        <!--android:background="@color/red"  Мб ошибку так помечать? -->
+        <!--android:backgroundTint="#FF0000" Цвет подчеркивания -->
 
         <EditText
             android:id="@+id/etPhoneNumber"
@@ -54,9 +56,10 @@
             android:id="@+id/etEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/user_email"
             android:autofillHints="emailAddress"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:hint="@string/user_email"
             android:inputType="textEmailAddress"
             android:minWidth="250dp"
             android:minHeight="48dp" />
@@ -65,7 +68,6 @@
             android:id="@+id/etPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:width="205dp"
             android:ems="10"
             android:hint="@string/user_password"
             android:autofillHints="password"
@@ -79,6 +81,13 @@
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
             android:text="@string/register" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/or"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/buttonSignIn"
