@@ -24,29 +24,31 @@
             android:fontFamily=""
             android:text="@string/signing_in"
             android:textAlignment="center"
-            android:textSize="40sp" />
+            android:textSize="36sp" />
 
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:autofillHints="emailAddress"
             android:ems="10"
             android:hint="@string/user_email"
-            android:autofillHints="emailAddress"
             android:inputType="textEmailAddress"
             android:minWidth="250dp"
-            android:minHeight="48dp" />
+            android:minHeight="48dp"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:autofillHints="password"
             android:ems="10"
             android:hint="@string/user_password"
-            android:autofillHints="password"
             android:inputType="textPassword"
             android:minWidth="250dp"
-            android:minHeight="48dp" />
+            android:minHeight="48dp"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/buttonSignIn"
@@ -56,7 +58,7 @@
             android:layout_marginTop="20dp" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tvOr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/or"
