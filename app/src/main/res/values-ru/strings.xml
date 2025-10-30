@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Интернет магазин</string>
+    <string name="user_name">Имя</string>
+    <string name="user_phone_number">Номер телефона</string>
+    <string name="user_email">Эл. почта</string>
+    <string name="user_password">Пароль</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="registration">Регистрация</string>
+    <string name="sign_in">Войти</string>
+    <string name="signing_in">Вход</string>
+    <string name="or">или</string>
+    <string name="wrong_phone_number_format">Неверный формат телефона</string>
+    <string name="wrong_email_format">Неверный формат эл. почты</string>
+    <string name="empty_name">Укажите Ваше имя</string>
+    <string name="wrong_password_format">Пароль слишком короткий</string>
+    <string name="wrong_email_or_password">Неверная почта или пароль</string>
+    <string name="email_in_DB">Данная эл. почта уже зарегистрирована</string>
+    <string name="email_not_in_DB">Данная эл. почта не была зарегистрирована</string>
+</resources>

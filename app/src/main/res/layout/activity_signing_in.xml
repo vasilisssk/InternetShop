@@ -17,33 +17,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textViewRegistration"
-            android:text="@string/registration"
-            style="@style/TitleTheme" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tILName"
-            style="@style/TextInputLayoutTheme">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:autofillHints="username"
-                android:hint="@string/user_name"
-                android:inputType="textPersonName"
-                style="@style/TextInputEditTextTheme"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tILPhoneNumber"
-            style="@style/TextInputLayoutTheme"
-            app:prefixText="+7">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:autofillHints="phone"
-                android:hint="@string/user_phone_number"
-                android:inputType="phone"
-                android:maxLength="10"
-                style="@style/TextInputEditTextTheme"/>
-        </com.google.android.material.textfield.TextInputLayout>
+            android:id="@+id/textViewSigningIn"
+            android:text="@string/signing_in"
+            style="@style/TitleTheme"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tILEmail"
@@ -53,7 +29,7 @@
                 android:autofillHints="emailAddress"
                 android:hint="@string/user_email"
                 android:inputType="textEmailAddress"
-                style="@style/TextInputEditTextTheme"/>
+                style="@style/TextInputEditTextTheme" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -68,8 +44,8 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/buttonRegister"
-            android:text="@string/register"
+            android:id="@+id/buttonSignIn"
+            android:text="@string/sign_in"
             android:layout_marginTop="30dp"
             style="@style/ButtonSigningTheme" />
 
@@ -79,12 +55,11 @@
             android:layout_height="wrap_content"
             android:text="@string/or"
             android:textSize="16sp"
-            android:fontFamily="@font/montserrat_regular" />
-
+            android:fontFamily="@font/montserrat_regular"/>
 
         <Button
-            android:id="@+id/buttonSignIn"
-            android:text="@string/sign_in"
+            android:id="@+id/buttonRegister"
+            android:text="@string/register"
             style="@style/ButtonSigningTheme" />
 
     </LinearLayout>

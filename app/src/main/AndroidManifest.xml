@@ -23,8 +23,7 @@
         </activity>
 
         <activity
-            android:name=".SigningInActivity"
-            android:label="Test" >
+            android:name=".SigningInActivity" >
         </activity>
 
     </application>

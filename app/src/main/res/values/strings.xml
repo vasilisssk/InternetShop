@@ -1,12 +1,19 @@
 <resources>
     <string name="app_name">InternetShop</string>
-    <string name="user_name">Имя</string>
-    <string name="user_phone_number">Номер телефона</string>
-    <string name="user_email">Почта</string>
-    <string name="user_password">Пароль</string>
-    <string name="register">Зарегестрироваться</string>
-    <string name="registration">Регистрация</string>
-    <string name="sign_in">Войти</string>
-    <string name="signing_in">Вход</string>
-    <string name="or">или</string>
+    <string name="user_name">Name</string>
+    <string name="user_phone_number">Phone number</string>
+    <string name="user_email">Email</string>
+    <string name="user_password">Password</string>
+    <string name="register">Sign Up</string>
+    <string name="registration">Registration</string>
+    <string name="sign_in">Sign In</string>
+    <string name="signing_in">Sign In</string>
+    <string name="or">or</string>
+    <string name="wrong_phone_number_format">Wrong phone format</string>
+    <string name="wrong_email_format">Wrong email format</string>
+    <string name="empty_name">Enter Your name</string>
+    <string name="wrong_password_format">Password is too short</string>
+    <string name="wrong_email_or_password">Wrong email or password</string>
+    <string name="email_in_DB">This email is already registered</string>
+    <string name="email_not_in_DB">This email is not registered</string>
 </resources>
