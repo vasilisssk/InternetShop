@@ -6,7 +6,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.game.internetshop.databinding.ActivityRegistrationBinding
-import com.google.android.material.textfield.TextInputLayout
 import utils.Utils
 
 class RegistrationActivity : AppCompatActivity() {

@@ -23,7 +23,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tILEmail"
-            style="@style/TextInputLayoutTheme">
+            style="@style/TextInputLayoutTheme"
+            app:startIconDrawable="@drawable/icon_email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:autofillHints="emailAddress"
@@ -34,13 +35,15 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tILPassword"
-            style="@style/TextInputLayoutTheme">
+            style="@style/TextInputLayoutTheme"
+            app:passwordToggleEnabled="true"
+            app:startIconDrawable="@drawable/icon_password">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:autofillHints="password"
                 android:hint="@string/user_password"
                 android:inputType="textPassword"
-                style="@style/TextInputEditTextTheme"/>
+                style="@style/TextInputEditTextTheme" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

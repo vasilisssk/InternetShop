@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.game.internetshop.databinding.ActivitySigningInBinding
-import com.google.android.material.textfield.TextInputLayout
 import utils.Utils
 
 class SigningInActivity : AppCompatActivity() {
