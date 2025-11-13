@@ -12,7 +12,11 @@
     <string name="wrong_phone_number_format">Wrong phone format</string>
     <string name="wrong_email_format">Wrong email format</string>
     <string name="empty_name">Enter Your name</string>
-    <string name="wrong_password_format">Password is too short</string>
+    <string name="password_is_too_short">Password is too short</string>
+    <string name="password_no_digit">Password must contain a number</string>
+    <string name="password_no_upper_case">Password must contain an uppercase character</string>
+    <string name="password_no_lower_case">Password must contain an lowercase character</string>
+    <string name="password_no_special_character">Password must contain a special character</string>
     <string name="wrong_email_or_password">Wrong email or password</string>
     <string name="email_in_DB">This email is already registered</string>
     <string name="email_not_in_DB">This email is not registered</string>

@@ -12,7 +12,11 @@
     <string name="wrong_phone_number_format">Неверный формат телефона</string>
     <string name="wrong_email_format">Неверный формат эл. почты</string>
     <string name="empty_name">Укажите Ваше имя</string>
-    <string name="wrong_password_format">Пароль слишком короткий</string>
+    <string name="password_is_too_short">Пароль слишком короткий</string>
+    <string name="password_no_digit">Пароль должен содержать цифру</string>
+    <string name="password_no_upper_case">Пароль должен содержать символ верхнего регистра</string>
+    <string name="password_no_lower_case">Пароль должен содержать символ нижнего регистра</string>
+    <string name="password_no_special_character">Пароль должен содержать специальный символ</string>
     <string name="wrong_email_or_password">Неверная почта или пароль</string>
     <string name="email_in_DB">Данная эл. почта уже зарегистрирована</string>
     <string name="email_not_in_DB">Данная эл. почта не была зарегистрирована</string>

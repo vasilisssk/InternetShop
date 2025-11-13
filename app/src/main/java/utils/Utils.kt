@@ -1,8 +1,6 @@
 package utils
 
-import android.adservices.ondevicepersonalization.InferenceInput
 import android.util.Patterns
-import com.google.android.material.textfield.TextInputLayout
 
 class Utils {
     companion object {
@@ -13,17 +11,39 @@ class Utils {
         fun isEmailValid(email: String): Boolean {
             return Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
+    }
 
-        fun isEmailInDB(email: String): Boolean {
-            return email.equals("erokhovvasiliy2005@gmail.com")
+    class ValidatePassword(val password: String) {
+        enum class ErrorMessage {
+            NONE,
+            TO_SHORT,
+            NO_DIGIT,
+            NO_UPPER_CASE,
+            NO_LOWER_CASE,
+            NO_SPECIAL_CHARACTER
         }
 
-        fun isPasswordLongEnough(password: String): Boolean {
-            return password.length > 4
-        }
+        val arrayOfSpecialCharacters = arrayOf("!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", ";", ":", ",", ".", "/", "?", "\\", "|", "`", "~", "[", "]", "{", "}")
 
-        fun isPasswordHashInDB(passwordHash: String): Boolean {
-            return passwordHash.equals("12345")
+        fun validate(): ErrorMessage {
+            val passwordArray = password.toCharArray()
+            if (password.length < 6) {
+                return ErrorMessage.TO_SHORT
+            }
+            if (!passwordArray.any {it.isDigit()}) {
+                return ErrorMessage.NO_DIGIT
+            }
+            if (!passwordArray.any {it.isUpperCase()}) {
+                return ErrorMessage.NO_UPPER_CASE
+            }
+            if (!passwordArray.any {it.isLowerCase()}) {
+                return ErrorMessage.NO_LOWER_CASE
+            }
+            if (!passwordArray.any {it.toString() in arrayOfSpecialCharacters}) {
+                return ErrorMessage.NO_SPECIAL_CHARACTER
+            }
+            return ErrorMessage.NONE
         }
     }
 }
+
