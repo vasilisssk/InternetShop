@@ -20,4 +20,12 @@
     <string name="wrong_email_or_password">Wrong email or password</string>
     <string name="email_in_DB">This email is already registered</string>
     <string name="email_not_in_DB">This email is not registered</string>
+    <string name="currency">₽</string>
+    <string name="price">Price</string>
+    <string name="filter_none">No</string>
+    <string name="filter_price_asc">Price (asc.)</string>
+    <string name="filter_price_desc">Price (desc.)</string>
+    <string name="filter_price_alph_order">Name (A-Z)</string>
+    <string name="filter_price_reverse_alph_order">Name (Z-A)</string>
+    <string name="empty_search">Empty</string>
 </resources>

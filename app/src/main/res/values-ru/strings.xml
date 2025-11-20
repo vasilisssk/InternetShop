@@ -20,4 +20,12 @@
     <string name="wrong_email_or_password">Неверная почта или пароль</string>
     <string name="email_in_DB">Данная эл. почта уже зарегистрирована</string>
     <string name="email_not_in_DB">Данная эл. почта не была зарегистрирована</string>
+    <string name="currency">₽</string>
+    <string name="price">Цена</string>
+    <string name="filter_none">Нет</string>
+    <string name="filter_price_asc">Цена (по возр.)</string>
+    <string name="filter_price_desc">Цена (по убыв.)</string>
+    <string name="filter_price_alph_order">Название (А-Я)</string>
+    <string name="filter_price_reverse_alph_order">Название (Я-А)</string>
+    <string name="empty_search">Пусто</string>
 </resources>

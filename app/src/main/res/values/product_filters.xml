@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="product_filters">
+        <item>@string/filter_none</item>
+        <item>@string/filter_price_asc</item>
+        <item>@string/filter_price_desc</item>
+        <item>@string/filter_price_alph_order</item>
+        <item>@string/filter_price_reverse_alph_order</item>
+    </string-array>
+</resources>

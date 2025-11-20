@@ -54,6 +54,14 @@ class RegistrationActivity : AppCompatActivity() {
             updateUI(state)
         }
 
+        binding.tILName.editText?.doAfterTextChanged {
+                text -> viewModel.onNameChanged(text.toString())
+        }
+
+        binding.tILPhoneNumber.editText?.doAfterTextChanged {
+                text -> viewModel.onPhoneNumberChanged(text.toString())
+        }
+
         binding.tILEmail.editText?.doAfterTextChanged {
                 text -> viewModel.onEmailChanged(text.toString())
         }
