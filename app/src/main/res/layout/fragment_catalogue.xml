@@ -12,23 +12,23 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toStartOf="@+id/spinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:background="@drawable/background_rounded_full"
-        android:backgroundTint="#44999999"
         android:id="@+id/spinner"
         android:layout_width="75dp"
         android:layout_height="0dp"
-        android:layout_margin="6dp"
-        app:layout_constraintBottom_toTopOf="@+id/rv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/background_rounded_full"
+        android:backgroundTint="#44999999"
+        android:gravity="center"
         android:textAlignment="center"
-        android:gravity="center"/>
+        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
@@ -46,12 +46,11 @@
         android:id="@+id/tvEmptySearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="6dp"
         android:text="@string/empty_search"
         app:layout_constraintEnd_toEndOf="@+id/rv"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/rv"
         app:layout_constraintTop_toTopOf="@+id/rv"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

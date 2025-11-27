@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +36,7 @@ class ProductAdapter(
         private val buttonIncrease: Button = itemView.findViewById(R.id.buttonIncrease)
         private val buttonDecrease: Button = itemView.findViewById(R.id.buttonDecrease)
         private val tvPrice: TextView = itemView.findViewById(R.id.tvPrice)
+        private val imageButton: ImageButton = itemView.findViewById(R.id.imageButton)
 
         fun bind(catalogueUiItem: CatalogueUiItem) {
             val product: Product = catalogueUiItem.product
@@ -46,6 +49,11 @@ class ProductAdapter(
 
             buttonDecrease.isEnabled = quantityInCart > 0
             buttonDecrease.alpha = if (quantityInCart > 0) 1f else 0.75f
+
+            imageButton.setImageResource(R.drawable.ic_favorite_filled_in)
+            imageButton.setOnClickListener {
+                Toast.makeText(itemView.context, "Кнопка нажата", Toast.LENGTH_SHORT).show()
+            }
 
             buttonIncrease.setOnClickListener {
                 onIncreaseButtonClick(product.id)

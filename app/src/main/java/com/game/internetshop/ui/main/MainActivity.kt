@@ -43,8 +43,6 @@ class MainActivity: AppCompatActivity() {
                 }
             }
 
-            tint(R.color.black)
-
             onItemClicked { section ->
                 navController.navigate(route = section.link)
             }
