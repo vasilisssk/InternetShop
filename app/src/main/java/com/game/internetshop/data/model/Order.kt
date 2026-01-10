@@ -1,13 +1,13 @@
 package com.game.internetshop.data.model
 
-import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Order (
     @SerialName("registration_date")
-    val registrationDate: Instant,
+    val registrationDate: LocalDateTime,
     @SerialName("total_price")
     val totalPrice: Float,
     @SerialName("user_id")

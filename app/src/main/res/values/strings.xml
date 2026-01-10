@@ -82,4 +82,5 @@
     <string name="error_orders_general">Error while working with user orders</string>
     <string name="error_sign_out">Error signing out of account</string>
     <string name="error_settings_general">Error in settings work</string>
+    <string name="piece">pc.</string>
 </resources>

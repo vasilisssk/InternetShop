@@ -76,7 +76,7 @@ class OrdersAdapter(): ListAdapter<OrdersUiItem, OrdersAdapter.OrdersViewHolder>
 
             val orderedProductsInfo: StringBuilder = StringBuilder("")
             for (productInfo in productsInfo) {
-                orderedProductsInfo.append("${productInfo.name} (${productInfo.brand}) - ${productInfo.quantity} pc. - ${productInfo.price} ₽ \n")
+                orderedProductsInfo.append("${productInfo.name} (${productInfo.brand}) - ${productInfo.quantity} ${context.getString(R.string.piece)} - ${productInfo.price} ₽ \n")
             }
 
             tvOrderedItems.text = orderedProductsInfo.toString()

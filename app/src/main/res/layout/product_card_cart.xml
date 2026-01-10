@@ -84,6 +84,7 @@
                         android:fontFamily="@font/montserrat_regular"/>
 
                 <Button
+                        android:layout_marginBottom="6dp"
                         android:padding="0dp"
                         android:text="-"
                         android:layout_width="40dp"
@@ -100,6 +101,7 @@
                         android:text="+"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
+                        android:layout_marginBottom="6dp"
                         android:id="@+id/btnIncreaseCart"
                         android:background="@drawable/background_rounded_full"
                         app:layout_constraintStart_toEndOf="@+id/tvCounterCart"
@@ -108,6 +110,7 @@
                         android:fontFamily="@font/montserrat_regular"/>
 
                 <TextView
+                        android:layout_marginBottom="6dp"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:id="@+id/tvCounterCart"

@@ -46,9 +46,7 @@ class OrderRepositoryImpl(
                 nanosecond = 0
             )
 
-            val instantFromLocalTime = localDateTimeWithoutNanos.toInstant(TimeZone.currentSystemDefault())
-
-            val order = Order(registrationDate = instantFromLocalTime, totalPrice = totalPrice, userId = userId, statusId = 1, paymentId = paymentVariant)
+            val order = Order(registrationDate = localDateTimeWithoutNanos, totalPrice = totalPrice, userId = userId, statusId = 1, paymentId = paymentVariant)
             val insertedOrderId = supabaseClient.postgrest
                 .from("orders")
                 .insert(order) {

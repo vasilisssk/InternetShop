@@ -44,8 +44,8 @@
     <string name="total_price">Общая стоимость</string>
     <string name="ordered_items">Заказанные товары</string>
     <string name="empty_cart">В корзине нет ни одного товара</string>
-    <string name="choose_payment_variant">…</string>
-    <string name="payment_not_chosen">Выберете способ оплаты</string>
+    <string name="choose_payment_variant">Выберете способ оплаты</string>
+    <string name="payment_not_chosen">…</string>
     <string name="payment_card_online">Картой онлайн</string>
     <string name="payment_card_upon_receipt">Картой при получении</string>
     <string name="payment_cash">Наличными</string>
@@ -82,4 +82,5 @@
     <string name="error_orders_general">Ошибка при работе с заказками пользователя</string>
     <string name="error_sign_out">Не удалось выйти из аккаунта</string>
     <string name="error_settings_general">Ошиюба в работе настроек</string>
+    <string name="piece">шт.</string>
 </resources>
