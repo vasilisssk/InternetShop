@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,10 +16,10 @@ import com.game.internetshop.R
 import com.game.internetshop.databinding.FragmentCatalogueBinding
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import utils.Utils
 import kotlin.getValue
 
 class CatalogueFragment: Fragment() {
-
     private val viewModel: CatalogueViewModel by viewModel()
     private var _binding: FragmentCatalogueBinding? = null
     private val binding get() = _binding!!
@@ -33,8 +35,13 @@ class CatalogueFragment: Fragment() {
 
         setupRecyclerView()
         setupSearchView()
+        setupSearchView()
         setupSpinner()
         observeViewModel()
+
+        binding.fabToTop.setOnClickListener {
+            binding.rv.scrollToPosition(0)
+        }
     }
 
     private fun setupRecyclerView() {
@@ -56,10 +63,26 @@ class CatalogueFragment: Fragment() {
             adapter = myAdapter
             setHasFixedSize(true)
         }
+
+        rv.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
+
+                if (firstVisiblePosition > 0) {
+                    binding.fabToTop.show()
+                } else {
+                    binding.fabToTop.hide()
+                }
+            }
+        })
     }
 
     private fun setupSearchView() {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        val searchView = binding.searchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(p0: String?): Boolean {
                 viewModel.onSearchQueryChanged(p0 ?: "")
@@ -72,7 +95,7 @@ class CatalogueFragment: Fragment() {
             }
         })
 
-        binding.searchView.setOnCloseListener {
+        searchView.setOnCloseListener {
             viewModel.onSearchQueryChanged("")
             // с false SearchView сам очистит текст
             false
@@ -94,12 +117,12 @@ class CatalogueFragment: Fragment() {
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val selectedFilter = when (p2) {
-                    0 -> ProductFilter.NONE
-                    1 -> ProductFilter.PRICE_LOW_TO_HIGH
-                    2 -> ProductFilter.PRICE_HIGH_TO_LOW
-                    3 -> ProductFilter.NAME_A_TO_Z
-                    4 -> ProductFilter.NAME_Z_TO_A
-                    else -> ProductFilter.NONE
+                    0 -> CatalogueViewModel.ProductFilter.NONE
+                    1 -> CatalogueViewModel.ProductFilter.PRICE_LOW_TO_HIGH
+                    2 -> CatalogueViewModel.ProductFilter.PRICE_HIGH_TO_LOW
+                    3 -> CatalogueViewModel.ProductFilter.NAME_A_TO_Z
+                    4 -> CatalogueViewModel.ProductFilter.NAME_Z_TO_A
+                    else -> CatalogueViewModel.ProductFilter.NONE
                 }
                 viewModel.onFilterSelected(selectedFilter)
             }
@@ -107,7 +130,6 @@ class CatalogueFragment: Fragment() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 // ничего
             }
-
         }
     }
 
@@ -120,15 +142,43 @@ class CatalogueFragment: Fragment() {
             //binding.progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
 
             state.errorMessage?.let { error ->
-                showError(error)
+                when {
+                    error.contains("Failed getting all products") -> {
+                        Utils.showErrorSnackbar(binding.root, getString(R.string.error_get_all_products),
+                            Snackbar.LENGTH_LONG)
+                        viewModel.clearError()
+                    }
+                    error.contains("Failed adding to cart") -> {
+                        Utils.showErrorSnackbar(binding.root, getString(R.string.error_add_to_cart),
+                            Snackbar.LENGTH_LONG)
+                        viewModel.clearError()
+                    }
+                    error.contains("Failed removing from cart") -> {
+                        Utils.showErrorSnackbar(binding.root, getString(R.string.error_remove_from_cart),
+                            Snackbar.LENGTH_LONG)
+                        viewModel.clearError()
+                    }
+                    error.contains("Failed getting cart items") -> {
+                        Utils.showErrorSnackbar(binding.root, getString(R.string.error_get_cart_items),
+                            Snackbar.LENGTH_LONG)
+                        viewModel.clearError()
+                    }
+                    error.contains("Failed getting current user id") -> {
+                        Utils.showErrorSnackbar(binding.root, getString(R.string.error_get_user_id),
+                            Snackbar.LENGTH_LONG)
+                        viewModel.clearError()
+                    }
+                    else -> {
+                        Utils.showErrorSnackbar(binding.root, getString(R.string.error_catalogue_general),
+                            Snackbar.LENGTH_LONG)
+                        viewModel.clearError()
+                    }
+                }
             }
 
-            binding.tvEmptySearch.visibility = if (state.catalogueUiItems.isEmpty()) View.VISIBLE else View.GONE
+            binding.tvEmptySearch.visibility = if (state.catalogueUiItems.isEmpty() && state.isInitialized) View.VISIBLE else View.GONE
+            binding.tvLoadingCatalogue.visibility = if (state.isInitialized) View.GONE else View.VISIBLE
         }
-    }
-
-    private fun showError(error: String) {
-        Snackbar.make(binding.root, error, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

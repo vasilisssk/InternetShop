@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="payment_methods">
+        <item>@string/payment_not_chosen</item>
+        <item>@string/payment_card_online</item>
+        <item>@string/payment_card_upon_receipt</item>
+        <item>@string/payment_cash</item>
+        <item>@string/payment_FPS</item>
+        <item>@string/payment_crypto</item>
+    </string-array>
+</resources>

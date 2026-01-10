@@ -41,6 +41,11 @@ class MainActivity: AppCompatActivity() {
                     iconSource(resource(R.drawable.ic_orders))
                     link("orders")
                 }
+                section {
+                    title("Settings")
+                    iconSource(resource(R.drawable.ic_settings))
+                    link("settings")
+                }
             }
 
             onItemClicked { section ->

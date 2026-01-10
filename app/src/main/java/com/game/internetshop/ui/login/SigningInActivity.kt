@@ -2,11 +2,15 @@ package com.game.internetshop.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import com.game.internetshop.R
 import com.game.internetshop.databinding.ActivitySigningInBinding
+import com.game.internetshop.ui.main.MainActivity
 import com.game.internetshop.ui.registration.RegistrationActivity
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -16,17 +20,23 @@ class SigningInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySigningInBinding
     private val viewModel: SigningInViewModel by viewModel()
-
     private val INTENT_USER_EMAIL = "UserEmail"
+    private lateinit var mapOfSigningInErrors: MutableMap<String, String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivitySigningInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.tILEmail.errorIconDrawable = null
         binding.tILPassword.errorIconDrawable = null
         binding.tILEmail.editText?.setText(intent.getStringExtra(INTENT_USER_EMAIL) ?: "")
+
+        mapOfSigningInErrors = mutableMapOf<String, String>().apply {
+            put("Data", getString(R.string.wrong_data))
+            put("General", getString(R.string.signing_in_general))
+        }
 
         binding.buttonRegister.setOnClickListener {
             val intent = Intent(this, RegistrationActivity::class.java)
@@ -62,28 +72,50 @@ class SigningInActivity : AppCompatActivity() {
 
     private fun updateUI(state: SigningInViewModel.SigningInUiState) {
         //binding.progressBar.isVisible = state.isLoading
+
         binding.buttonSignIn.isEnabled = !state.isLoading
+        binding.buttonRegister.isEnabled = !state.isLoading
         binding.buttonSignIn.text = if (state.isLoading) "Loading..." else getString(R.string.sign_in)
 
         if (state.isSigningInSuccess) {
+            viewModel.resetSuccessState()
             navigateToMain()
-            viewModel.resetSuccessState()  // Сбрасываем флаг успеха
+        }
+        else {
+            state.errorMessage?.let { error ->
+                when {
+                    error.contains("Data") -> {
+                        Utils.showErrorSnackbar(binding.root, mapOfSigningInErrors.get("Data")!!,
+                            Snackbar.LENGTH_LONG)
+                        viewModel.clearError()
+                    }
+                    error.contains("General") -> {
+                        Utils.showErrorSnackbar(binding.root, mapOfSigningInErrors.get("General")!!,
+                            Snackbar.LENGTH_LONG)
+                        viewModel.clearError()
+                    }
+                    else -> {
+                        Utils.showErrorSnackbar(binding.root, state.errorMessage,
+                            Snackbar.LENGTH_LONG)
+                        viewModel.clearError()
+                    }
+                }
+            }
         }
     }
 
     private fun navigateToMain() {
-
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 
     private fun simpleValidation(): Boolean {
-        var correctnessFlag = true
-
         if (!Utils.Companion.isEmailValid(binding.tILEmail.editText?.text.toString())) {
             binding.tILEmail.error = getString(R.string.wrong_email_format)
-            correctnessFlag = false
+            return false
         }
         else binding.tILEmail.isErrorEnabled = false
 
-        return correctnessFlag
+        return true
     }
 }

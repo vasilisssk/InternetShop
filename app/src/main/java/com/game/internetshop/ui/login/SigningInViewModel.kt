@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.game.internetshop.data.model.AuthResult
-import com.game.internetshop.domain.usecase.SigningInUseCase
+import com.game.internetshop.domain.usecase.SignInUseCase
 import kotlinx.coroutines.launch
 
-class SigningInViewModel(private val signingInUseCase: SigningInUseCase) : ViewModel() {
+class SigningInViewModel(private val signInUseCase: SignInUseCase) : ViewModel() {
     private val _uiState = MutableLiveData(SigningInUiState())
     val uiState: LiveData<SigningInUiState> = _uiState
 
@@ -43,7 +43,7 @@ class SigningInViewModel(private val signingInUseCase: SigningInUseCase) : ViewM
         )
 
         viewModelScope.launch {
-            val result = signingInUseCase(
+            val result = signInUseCase(
                 _uiState.value?.email ?: "",
                 _uiState.value?.password ?: ""
             )

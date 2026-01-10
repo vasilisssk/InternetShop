@@ -1,5 +1,5 @@
-
 build/
+release/
 .gradle/
 .idea/
 *.iml
@@ -7,7 +7,10 @@ build/
 captures/
 *.apk, *.aab
 *.log
+*.jks
+*.keystore
 
 .DS_Store
 .externalNativeBuild
 local.properties
+secrets.properties

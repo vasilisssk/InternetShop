@@ -1,16 +1,21 @@
 package com.game.internetshop.ui.catalogue
 
+import CartRealtimeService
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.game.internetshop.data.model.AuthResult
 import com.game.internetshop.data.model.CartResult
 import com.game.internetshop.data.model.Product
 import com.game.internetshop.data.model.ProductInCart
 import com.game.internetshop.data.model.ProductResult
+import com.game.internetshop.data.repository.ProductRepositoryImpl
 import com.game.internetshop.domain.usecase.AddToCartUseCase
 import com.game.internetshop.domain.usecase.GetAllProductsUseCase
 import com.game.internetshop.domain.usecase.GetCartItemsUseCase
+import com.game.internetshop.domain.usecase.GetCurrentUserIdUseCase
 import com.game.internetshop.domain.usecase.RemoveFromCartUseCase
 import kotlinx.coroutines.launch
 
@@ -19,20 +24,21 @@ class CatalogueViewModel(
     private val addToCartUseCase: AddToCartUseCase,
     private val removeFromCartUseCase: RemoveFromCartUseCase,
     private val getCartItemsUseCase: GetCartItemsUseCase,
-    private val currentUserId: Int
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
+    private val cartRealtimeService: CartRealtimeService
     ): ViewModel() {
 
-    // состояние UI
-    private val _uiState = MutableLiveData(CatalogueUiState())
+    private val _uiState = MutableLiveData(CatalogueUiState()) // состояние UI
     val uiState: LiveData<CatalogueUiState> = _uiState
-
-    // все продукты изначально загружаются из репозитория/бд
-    private val allProducts = mutableListOf<Product>()
-    // кэш корзины пользователя
-    private val userCartItems = mutableListOf<ProductInCart>()
+    private val allProducts = mutableListOf<Product>() // все продукты изначально загружаются из репозитория/бд
+    private val userCartItems = mutableListOf<ProductInCart>() // кэш корзины пользователя
+    private var isSubscribed = false
+    private var currentUserId: Int = 0
 
     init {
+        loadCurrentUserId()
         loadInitialData()
+        startRealtimeSubscription()
     }
 
     data class CatalogueUiState(
@@ -40,7 +46,8 @@ class CatalogueViewModel(
         val searchQuery: String = "",
         val selectedFilter: ProductFilter = ProductFilter.NONE,
         val isLoading: Boolean = false,
-        val errorMessage: String? = null
+        val errorMessage: String? = null,
+        val isInitialized: Boolean = false
     )
 
     fun onSearchQueryChanged(query: String) {
@@ -57,17 +64,27 @@ class CatalogueViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value?.copy(isLoading = true)
 
-            when (val result = addToCartUseCase(currentUserId, productId, 1)) {
+            when (val result = addToCartUseCase(currentUserId, productId)) {
                 is CartResult.Success -> loadUserCart()
                 is CartResult.Error -> {
                     _uiState.value = _uiState.value?.copy(errorMessage = result.message, isLoading = false)
                 }
-                is CartResult.Loading -> {}
+                is CartResult.Loading -> _uiState.value = _uiState.value?.copy(isLoading = true)
             }
         }
     }
 
-    // ЗАГЛУШКА (подгружает данные из ProductRepository)
+    private fun loadCurrentUserId() {
+        viewModelScope.launch {
+            val result = getCurrentUserIdUseCase.invoke()
+            when(result) {
+                is AuthResult.Success -> currentUserId = result.data
+                is AuthResult.Error -> _uiState.value = _uiState.value?.copy(errorMessage = result.message, isLoading = false)
+                is AuthResult.Loading -> _uiState.value = _uiState.value?.copy(isLoading = true)
+            }
+        }
+    }
+
     private fun loadInitialData() {
         viewModelScope.launch {
             _uiState.value = _uiState.value?.copy(isLoading = true)
@@ -87,7 +104,7 @@ class CatalogueViewModel(
                         errorMessage = result.message,
                         isLoading = false
                     )
-                } else -> { }
+                } else -> _uiState.value = _uiState.value?.copy(isLoading = true)
             }
         }
     }
@@ -101,7 +118,7 @@ class CatalogueViewModel(
                 is CartResult.Error -> {
                     _uiState.value = _uiState.value?.copy(errorMessage = result.message, isLoading = false)
                 }
-                is CartResult.Loading -> {}
+                is CartResult.Loading -> _uiState.value = _uiState.value?.copy(isLoading = true)
             }
         }
     }
@@ -117,29 +134,6 @@ class CatalogueViewModel(
             is CartResult.Loading -> _uiState.value = _uiState.value?.copy(isLoading = true)
         }
     }
-
-    //заглушка
-//    private fun loadProductsFromRepository() {
-//        viewModelScope.launch {
-//            _uiState.value = _uiState.value?.copy(isLoading = true)
-//
-//            when (val result = getAllProductsUseCase()) { // suspend operator fun может быть вызвана из Корутин или из suspend fun
-//                is ProductResult.Success -> {
-//                    allProducts.clear()
-//                    allProducts.addAll(result.data)
-//                    applyFilterAndSearch()
-//                    _uiState.value = _uiState.value?.copy(isLoading = false)
-//                }
-//                is ProductResult.Error -> {
-//                    _uiState.value = _uiState.value?.copy(
-//                        errorMessage = result.message,
-//                        isLoading = false
-//                    )
-//                }
-//                is ProductResult.Loading -> null
-//            }
-//        }
-//    }
 
     private fun applyFilterAndSearch() {
         val state = _uiState.value
@@ -171,15 +165,54 @@ class CatalogueViewModel(
 
         _uiState.value = state?.copy(
             catalogueUiItems=catalogueUiItems,
-            isLoading = false
+            isLoading = false,
+            isInitialized = true
         ) ?: CatalogueUiState (catalogueUiItems = catalogueUiItems)
     }
-}
 
-enum class ProductFilter {
-    NONE,
-    PRICE_LOW_TO_HIGH,
-    PRICE_HIGH_TO_LOW,
-    NAME_A_TO_Z,
-    NAME_Z_TO_A
+    private fun startRealtimeSubscription() {
+        viewModelScope.launch {
+            try {
+                isSubscribed = true
+                cartRealtimeService.subscribeToCartChanges(currentUserId) {
+                    // Этот коллбек будет вызываться в потоке, где работает collect
+                    // нужно переключиться на главный поток для обновления UI
+                    viewModelScope.launch {
+                        Log.w("supabase_startrealtimesub", "Before loadingCart")
+                        loadUserCart()
+                        Log.w("supabase_startrealtimesub", "After loadingCart")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("supabase_startrealtimesub", e.message.toString())
+                isSubscribed = false
+                _uiState.value = _uiState.value?.copy(
+                    errorMessage = "Error in realtime connection"
+                )
+            }
+        }
+    }
+
+    override fun onCleared() {
+        Log.w("supabase_oncleared", "Before unsubscribing")
+        super.onCleared()
+        if (isSubscribed) {
+            viewModelScope.launch {
+                cartRealtimeService.unsubscribe()
+            }
+        }
+        Log.w("supabase_oncleared", "After unsubscribing")
+    }
+
+    fun clearError() {
+        _uiState.value = _uiState.value?.copy(errorMessage = null)
+    }
+
+    enum class ProductFilter {
+        NONE,
+        PRICE_LOW_TO_HIGH,
+        PRICE_HIGH_TO_LOW,
+        NAME_A_TO_Z,
+        NAME_Z_TO_A
+    }
 }

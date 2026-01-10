@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="6dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/ic_product"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:id="@+id/ivProductIc"
+                        android:layout_margin="6dp"/>
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toEndOf="@+id/ivProductIc"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:id="@+id/tvProductName"
+                        android:layout_margin="6dp"
+                        android:fontFamily="@font/montserrat_regular"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/brand"
+                        app:layout_constraintTop_toBottomOf="@+id/tvProductName"
+                        app:layout_constraintStart_toEndOf="@+id/ivProductIc"
+                        android:id="@+id/tvBrandHolder"
+                        android:layout_margin="6dp"
+                        android:fontFamily="@font/montserrat_regular"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        app:layout_constraintTop_toBottomOf="@+id/tvProductName"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:id="@+id/tvBrandValue"
+                        android:layout_margin="6dp"
+                        android:fontFamily="@font/montserrat_regular"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/price"
+                        app:layout_constraintTop_toBottomOf="@+id/tvBrandHolder"
+                        app:layout_constraintStart_toEndOf="@+id/ivProductIc"
+                        android:id="@+id/tvPriceHolder"
+                        android:layout_margin="6dp"
+                        android:fontFamily="@font/montserrat_regular"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        app:layout_constraintTop_toBottomOf="@+id/tvBrandValue"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:id="@+id/tvPriceValue"
+                        android:layout_margin="6dp"
+                        android:fontFamily="@font/montserrat_regular"/>
+
+                <Button
+                        android:padding="0dp"
+                        android:text="-"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/btnDecreaseCart"
+                        android:background="@drawable/background_rounded_full"
+                        app:layout_constraintEnd_toStartOf="@+id/tvCounterCart"
+                        app:layout_constraintTop_toBottomOf="@+id/tvPriceHolder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:fontFamily="@font/montserrat_regular"/>
+
+                <Button
+                        android:padding="0dp"
+                        android:text="+"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/btnIncreaseCart"
+                        android:background="@drawable/background_rounded_full"
+                        app:layout_constraintStart_toEndOf="@+id/tvCounterCart"
+                        app:layout_constraintTop_toBottomOf="@+id/tvPriceHolder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:fontFamily="@font/montserrat_regular"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:id="@+id/tvCounterCart"
+                        android:gravity="center"
+                        android:minWidth="40dp"
+                        android:text="0"
+                        android:textAlignment="center"
+                        android:textSize="14sp"
+                        app:layout_constraintTop_toBottomOf="@+id/tvPriceHolder"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/ivProductIc"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:fontFamily="@font/montserrat_regular"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,16 @@
 package com.game.internetshop.data.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Product(
+    @SerialName("product_id")
     val id: Int,
+    @SerialName("product_name")
     val name: String,
+    @SerialName("price")
     val price: Float,
-    val imageUrl: String? = null,
-    val imageRes: Int? = null
+    @SerialName("brand")
+    val brand: String
 )

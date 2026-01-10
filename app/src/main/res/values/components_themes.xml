@@ -33,9 +33,28 @@
 
     <style name="ButtonSigningTheme">
         <item name="android:layout_width">240dp</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">60dp</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:fontFamily">@font/montserrat_regular</item>
+        <item name="background">@drawable/background_rounded_full</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="SearchViewFont" parent="android:Widget.Material.SearchView">
+        <item name="fontFamily">@font/montserrat_regular</item>
+    </style>
+
+    <style name="EditTextFont">
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:textColor">@color/icon_color</item>
+    </style>
+
+    <style name="SpinnerFont" parent="TextAppearance.AppCompat.Widget.TextView.SpinnerItem">
+        <item name="fontFamily">@font/montserrat_regular</item>
+    </style>
+
+    <style name="OrangeButton" parent="android:Widget.Button">
+        <item name="android:backgroundTint">@color/icon_color</item>
     </style>
 </resources>
