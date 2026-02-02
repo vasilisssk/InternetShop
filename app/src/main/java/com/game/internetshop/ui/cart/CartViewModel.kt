@@ -19,7 +19,11 @@ import com.game.internetshop.domain.usecase.GetCurrentUserIdUseCase
 import com.game.internetshop.domain.usecase.GetProductByIdUseCase
 import com.game.internetshop.domain.usecase.RemoveFromCartUseCase
 import com.game.internetshop.ui.catalogue.CatalogueUiItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CartViewModel(
     private val addToCartUseCase: AddToCartUseCase,
@@ -36,6 +40,10 @@ class CartViewModel(
     private val userCartItems = mutableListOf<ProductInCart>() // кэш корзины пользователя
     private var isSubscribed = false
     private var currentUserId: Int = 0
+
+    // Job для отслеживания корутин подписки
+    private var subscriptionJob: Job? = null
+    private var eventsCollectionJob: Job? = null
 
     init {
         loadUserAndHisCart()
@@ -116,10 +124,37 @@ class CartViewModel(
                 is AuthResult.Success ->  {
                     currentUserId = result.data
                     loadUserCartInfo(currentUserId)
-                    startRealtimeSubscription(currentUserId)
+                    setupRealtimeSubscription(currentUserId)
                 }
                 is AuthResult.Error -> _uiState.value = _uiState.value?.copy(errorMessage = result.message, isLoading = false)
                 is AuthResult.Loading -> _uiState.value = _uiState.value?.copy(isLoading = true)
+            }
+        }
+    }
+
+    private fun setupRealtimeSubscription(userId: Int) {
+        // Отменяем предыдущие подписки, если есть
+        subscriptionJob?.cancel()
+        eventsCollectionJob?.cancel()
+
+        subscriptionJob = viewModelScope.launch(Dispatchers.IO) {
+            try {
+                cartRealtimeService.subscribeToCartChanges(userId)
+            } catch (e: Exception) {
+                Log.e("cartviewmodel_setuprealtimesubscription", e.message.toString())
+                withContext(Dispatchers.Main) {
+                    _uiState.value = _uiState.value?.copy(
+                        errorMessage = "Realtime connection error"
+                    )
+                }
+            }
+        }
+
+        // собираем события в отдельной корутине
+        eventsCollectionJob = viewModelScope.launch {
+            cartRealtimeService.cartEvents.collect {
+                // данный collect не блокирует корутину
+                loadUserCartInfo(userId)
             }
         }
     }
@@ -132,21 +167,26 @@ class CartViewModel(
                     userCartItems.clear()
                     userCartItems.addAll(result.data)
                     Log.w("supabase_cartviewmodel_loadusercartinfo","UserCartItems after getCartItemsUseCase: $userCartItems")
+
                     selectedProducts.clear()
                     val selectedProductsFromDB = mutableListOf<Product>()
-                    for (cartItem in userCartItems) {
-                        when (val productResult = getProductByIdUseCase.invoke(cartItem.productId)) {
+
+                    val deferredProducts = result.data.map { cartItem ->
+                        async { getProductByIdUseCase.invoke(cartItem.productId) }
+                    }
+
+                    deferredProducts.forEach { deferred ->
+                        when (val productResult = deferred.await()) {
                             is ProductResult.Success -> {
                                 selectedProductsFromDB.add(productResult.data)
                             }
                             is ProductResult.Error -> {
-                                _uiState.value?.copy(errorMessage = productResult.message)
+                                Log.e("cartviewmodel_loadusercartinfo", "Failed to load product")
                             }
-                            else -> {
-                                _uiState.value = _uiState.value?.copy(isLoading = true)
-                            }
+                            else -> Unit
                         }
                     }
+
                     selectedProducts.addAll(selectedProductsFromDB)
                     selectedProducts.sortBy { it.name }
                     formCartUiItemsList()
@@ -173,38 +213,23 @@ class CartViewModel(
         ) ?: CartUiState (cartUiItems = cartUiItems)
     }
 
-    private fun startRealtimeSubscription(currentUserId: Int) {
-        viewModelScope.launch {
-            try {
-                isSubscribed = true
-                cartRealtimeService.subscribeToCartChanges(currentUserId) {
-                    // Этот коллбек будет вызываться в потоке, где работает collect
-                    // нужно переключиться на главный поток для обновления UI
-                    viewModelScope.launch {
-                        Log.w("supabase_startrealtimesub", "Before loadingCart")
-                        loadUserCartInfo(currentUserId)
-                        Log.w("supabase_startrealtimesub", "After loadingCart")
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("supabase_startrealtimesub", e.message.toString())
-                isSubscribed = false
-                _uiState.value = _uiState.value?.copy(
-                    errorMessage = "Error in realtime connection"
-                )
-            }
-        }
-    }
-
     override fun onCleared() {
         Log.w("supabase_oncleared", "Before unsubscribing")
-        super.onCleared()
-        if (isSubscribed) {
-            viewModelScope.launch {
-                cartRealtimeService.unsubscribe()
-            }
+        // Отменяем все корутины
+        subscriptionJob?.cancel()
+        eventsCollectionJob?.cancel()
+        // Затем отписываемся от сервиса
+        viewModelScope.launch {
+            cartRealtimeService.unsubscribe()
         }
         Log.w("supabase_oncleared", "After unsubscribing")
+        super.onCleared()
+    }
+
+    fun refreshRealtimeSubscription() {
+        if (currentUserId != 0) {
+            setupRealtimeSubscription(currentUserId)
+        }
     }
 
     fun clearError() {

@@ -17,7 +17,10 @@ import com.game.internetshop.domain.usecase.GetAllProductsUseCase
 import com.game.internetshop.domain.usecase.GetCartItemsUseCase
 import com.game.internetshop.domain.usecase.GetCurrentUserIdUseCase
 import com.game.internetshop.domain.usecase.RemoveFromCartUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CatalogueViewModel(
     private val getAllProductsUseCase: GetAllProductsUseCase,
@@ -34,11 +37,13 @@ class CatalogueViewModel(
     private val userCartItems = mutableListOf<ProductInCart>() // кэш корзины пользователя
     private var isSubscribed = false
     private var currentUserId: Int = 0
+    // Job для управления корутинами подписки
+    private var subscriptionJob: Job? = null
+    private var eventsCollectionJob: Job? = null
+
 
     init {
         loadCurrentUserId()
-        loadInitialData()
-        startRealtimeSubscription()
     }
 
     data class CatalogueUiState(
@@ -64,7 +69,7 @@ class CatalogueViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value?.copy(isLoading = true)
 
-            when (val result = addToCartUseCase(currentUserId, productId)) {
+            when (val result = addToCartUseCase.invoke(currentUserId, productId)) {
                 is CartResult.Success -> loadUserCart()
                 is CartResult.Error -> {
                     _uiState.value = _uiState.value?.copy(errorMessage = result.message, isLoading = false)
@@ -76,9 +81,13 @@ class CatalogueViewModel(
 
     private fun loadCurrentUserId() {
         viewModelScope.launch {
-            val result = getCurrentUserIdUseCase.invoke()
-            when(result) {
-                is AuthResult.Success -> currentUserId = result.data
+            when(val result = getCurrentUserIdUseCase.invoke()) {
+                is AuthResult.Success -> {
+                    currentUserId = result.data
+                    // загрузка данных после получения currentUserId
+                    loadInitialData()
+                    setupRealtimeSubscription()
+                }
                 is AuthResult.Error -> _uiState.value = _uiState.value?.copy(errorMessage = result.message, isLoading = false)
                 is AuthResult.Loading -> _uiState.value = _uiState.value?.copy(isLoading = true)
             }
@@ -124,6 +133,8 @@ class CatalogueViewModel(
     }
 
     private suspend fun loadUserCart() {
+        if (currentUserId == 0) return
+
         when (val result = getCartItemsUseCase(currentUserId)) {
             is CartResult.Success -> {
                 userCartItems.clear()
@@ -170,42 +181,53 @@ class CatalogueViewModel(
         ) ?: CatalogueUiState (catalogueUiItems = catalogueUiItems)
     }
 
-    private fun startRealtimeSubscription() {
-        viewModelScope.launch {
+    private fun setupRealtimeSubscription() {
+        if (currentUserId == 0) return
+
+        subscriptionJob?.cancel()
+        eventsCollectionJob?.cancel()
+
+        subscriptionJob = viewModelScope.launch {
             try {
-                isSubscribed = true
-                cartRealtimeService.subscribeToCartChanges(currentUserId) {
-                    // Этот коллбек будет вызываться в потоке, где работает collect
-                    // нужно переключиться на главный поток для обновления UI
-                    viewModelScope.launch {
-                        Log.w("supabase_startrealtimesub", "Before loadingCart")
-                        loadUserCart()
-                        Log.w("supabase_startrealtimesub", "After loadingCart")
-                    }
-                }
+                cartRealtimeService.subscribeToCartChanges(currentUserId)
             } catch (e: Exception) {
                 Log.e("supabase_startrealtimesub", e.message.toString())
                 isSubscribed = false
-                _uiState.value = _uiState.value?.copy(
-                    errorMessage = "Error in realtime connection"
-                )
+                withContext(Dispatchers.Main) {
+                    _uiState.value = _uiState.value?.copy(
+                        errorMessage = "Error in realtime connection"
+                    )
+                }
+            }
+        }
+
+        eventsCollectionJob = viewModelScope.launch {
+            cartRealtimeService.cartEvents.collect {
+                loadUserCart()
             }
         }
     }
 
     override fun onCleared() {
         Log.w("supabase_oncleared", "Before unsubscribing")
-        super.onCleared()
-        if (isSubscribed) {
-            viewModelScope.launch {
-                cartRealtimeService.unsubscribe()
-            }
+        subscriptionJob?.cancel()
+        eventsCollectionJob?.cancel()
+
+        viewModelScope.launch {
+            cartRealtimeService.unsubscribe()
         }
         Log.w("supabase_oncleared", "After unsubscribing")
+        super.onCleared()
     }
 
     fun clearError() {
         _uiState.value = _uiState.value?.copy(errorMessage = null)
+    }
+
+    fun refreshRealtimeSubscription() {
+        if (currentUserId != 0) {
+            setupRealtimeSubscription()
+        }
     }
 
     enum class ProductFilter {
