@@ -187,7 +187,7 @@ class CatalogueViewModel(
         subscriptionJob?.cancel()
         eventsCollectionJob?.cancel()
 
-        subscriptionJob = viewModelScope.launch {
+        subscriptionJob = viewModelScope.launch(Dispatchers.IO) {
             try {
                 cartRealtimeService.subscribeToCartChanges(currentUserId)
             } catch (e: Exception) {
