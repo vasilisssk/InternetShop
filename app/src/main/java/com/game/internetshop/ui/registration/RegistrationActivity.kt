@@ -90,7 +90,7 @@ class RegistrationActivity : AppCompatActivity() {
         //binding.progressBar.isVisible = state.isLoading
         binding.buttonSignIn.isEnabled = !state.isLoading
         binding.buttonRegister.isEnabled = !state.isLoading
-        binding.buttonRegister.text = if (state.isLoading) "Loading..." else getString(R.string.register)
+        binding.buttonRegister.text = if (state.isLoading) getString(R.string.loading_btn) else getString(R.string.register)
 
         if (state.isRegistrationSuccess) {
             viewModel.resetSuccessState()

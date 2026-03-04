@@ -33,12 +33,12 @@
 
     <style name="ButtonSigningTheme">
         <item name="android:layout_width">240dp</item>
-        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_height">50dp</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:fontFamily">@font/montserrat_regular</item>
         <item name="background">@drawable/background_rounded_full</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="SearchViewFont" parent="android:Widget.Material.SearchView">

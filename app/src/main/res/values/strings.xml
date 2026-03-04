@@ -83,4 +83,5 @@
     <string name="error_sign_out">Error signing out of account</string>
     <string name="error_settings_general">Error in settings work</string>
     <string name="piece">pc.</string>
+    <string name="loading_btn">Loading…</string>
 </resources>

@@ -75,7 +75,7 @@ class SigningInActivity : AppCompatActivity() {
 
         binding.buttonSignIn.isEnabled = !state.isLoading
         binding.buttonRegister.isEnabled = !state.isLoading
-        binding.buttonSignIn.text = if (state.isLoading) "Loading..." else getString(R.string.sign_in)
+        binding.buttonSignIn.text = if (state.isLoading) getString(R.string.loading_btn) else getString(R.string.sign_in)
 
         if (state.isSigningInSuccess) {
             viewModel.resetSuccessState()
