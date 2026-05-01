@@ -1,4 +1,4 @@
-package com.game.internetshop.views.catalogue
+package com.game.internetshop.views.base.catalogue
 
 import android.view.LayoutInflater
 import android.view.View

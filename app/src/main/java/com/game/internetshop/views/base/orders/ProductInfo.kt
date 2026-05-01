@@ -1,4 +1,4 @@
-package com.game.internetshop.views.orders
+package com.game.internetshop.views.base.orders
 
 data class ProductInfo (
     val name: String,

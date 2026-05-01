@@ -1,4 +1,4 @@
-package com.game.internetshop.domain.usecase
+package com.game.internetshop.domain.usecase.auth
 
 import com.game.internetshop.data.common.Result
 import com.game.internetshop.data.repository.AuthRepository

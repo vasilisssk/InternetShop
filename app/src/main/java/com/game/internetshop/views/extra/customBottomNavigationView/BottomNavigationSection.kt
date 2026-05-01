@@ -1,4 +1,4 @@
-package com.game.internetshop.views.customBottomNavigationView
+package com.game.internetshop.views.extra.customBottomNavigationView
 
 data class BottomNavigationSection(
     val title: String,

@@ -1,4 +1,4 @@
-package com.game.internetshop.views.login
+package com.game.internetshop.views.base.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,8 +9,8 @@ import androidx.core.widget.doAfterTextChanged
 import com.game.internetshop.R
 import com.game.internetshop.databinding.ActivitySigningInBinding
 import com.game.internetshop.viewmodels.SigningInViewModel
-import com.game.internetshop.views.main.MainActivity
-import com.game.internetshop.views.registration.RegistrationActivity
+import com.game.internetshop.views.base.main.MainActivity
+import com.game.internetshop.views.base.registration.RegistrationActivity
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import utils.Utils

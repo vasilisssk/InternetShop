@@ -1,4 +1,4 @@
-package com.game.internetshop.views.main
+package com.game.internetshop.views.base.main
 
 import android.os.Bundle
 import com.game.internetshop.R
@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.game.internetshop.databinding.ActivityMainBinding
-import com.game.internetshop.views.customBottomNavigationView.IconSource.Companion.resource
-import com.game.internetshop.views.customBottomNavigationView.setup
+import com.game.internetshop.views.extra.customBottomNavigationView.IconSource.Companion.resource
+import com.game.internetshop.views.extra.customBottomNavigationView.setup
 
 class MainActivity: AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

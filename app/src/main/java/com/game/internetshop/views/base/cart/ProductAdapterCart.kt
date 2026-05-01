@@ -1,4 +1,4 @@
-package com.game.internetshop.views.cart
+package com.game.internetshop.views.base.cart
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.game.internetshop.R
 import com.game.internetshop.data.model.Product
-import com.game.internetshop.views.catalogue.CatalogueUiItem
-import com.game.internetshop.views.catalogue.ProductAdapter
+import com.game.internetshop.views.base.catalogue.CatalogueUiItem
+import com.game.internetshop.views.base.catalogue.ProductAdapter
 
 class ProductAdapterCart(
     private val onIncreaseButtonClick: (productId: Int) -> Unit,

@@ -1,4 +1,4 @@
-package com.game.internetshop.views.cart
+package com.game.internetshop.views.base.cart
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.game.internetshop.R
 import com.game.internetshop.databinding.FragmentCartBinding
 import com.game.internetshop.viewmodels.CartViewModel
-import com.game.internetshop.views.catalogue.CatalogueUiItem
+import com.game.internetshop.views.base.catalogue.CatalogueUiItem
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import utils.Utils

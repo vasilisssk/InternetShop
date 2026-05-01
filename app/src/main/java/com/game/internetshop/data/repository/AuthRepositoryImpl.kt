@@ -1,7 +1,7 @@
 package com.game.internetshop.data.repository
 
 import android.util.Log
-import com.game.internetshop.data.model.AuthResult
+import com.game.internetshop.data.common.Result
 import com.game.internetshop.data.model.User
 import com.game.internetshop.data.model.UserProfile
 import io.github.jan.supabase.SupabaseClient
@@ -11,7 +11,6 @@ import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.rpc
-import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -20,7 +19,7 @@ import utils.Utils
 class AuthRepositoryImpl(
     private val supabaseClient: SupabaseClient
 ): AuthRepository {
-    override suspend fun login(email: String, password: String): AuthResult<User> {
+    override suspend fun login(email: String, password: String): Result<User> {
         return try {
             Log.w("supabase_login", "Curr session: ${supabaseClient.auth.currentSessionOrNull().toString()}")
             supabaseClient.auth.signInWith(Email) {
@@ -31,7 +30,7 @@ class AuthRepositoryImpl(
             Log.w("supabase_login", "Before currentUser")
             val user = supabaseClient.auth.currentUserOrNull()
             if (user == null) {
-                return AuthResult.Error("General")
+                return Result.Error("General")
             }
             Log.w("supabase_login", "After currentUser")
 
@@ -57,17 +56,17 @@ class AuthRepositoryImpl(
 
             Log.w("supabase_login", "After SQL query: ${queryUserData.user_id} || ${queryUserData.user_name}")
 
-            AuthResult.Success(User(queryUserData.user_id!!,user.email!!, queryUserData.user_name!!))
+            Result.Success(User(queryUserData.user_id!!,user.email!!, queryUserData.user_name!!))
         } catch (e: Exception) {
             Log.e("supabase_login", e.message.toString())
             when {
-                e.message.toString().contains("Invalid login credentials") -> AuthResult.Error("Data")
-                else -> AuthResult.Error("General")
+                e.message.toString().contains("Invalid login credentials") -> Result.Error("Data")
+                else -> Result.Error("General")
             }
         }
     }
 
-    override suspend fun register(name: String, phoneNumber: String, email: String, password: String): AuthResult<User> {
+    override suspend fun register(name: String, phoneNumber: String, email: String, password: String): Result<User> {
         return try {
 
             Log.w("supabase_register", "Before checking phone")
@@ -75,7 +74,7 @@ class AuthRepositoryImpl(
             val isPhoneExists = isPhoneNumberExists("+7$phoneNumber")
             if (isPhoneExists) {
                 Log.e("supabase_register", "Phone exists")
-                return AuthResult.Error("Phone")
+                return Result.Error("Phone")
             }
 
             Log.w("supabase_register", "After checking phone")
@@ -96,7 +95,7 @@ class AuthRepositoryImpl(
 
             val authUserUUID: String? = currentUser?.id
             if (authUserUUID == null) {
-                return AuthResult.Error("General")
+                return Result.Error("General")
             }
 
             Log.w("supabase_register", "Before userProfile")
@@ -119,20 +118,20 @@ class AuthRepositoryImpl(
             }
 
             if (newUserId == null) {
-                return AuthResult.Error("General")
+                return Result.Error("General")
             }
 
-            AuthResult.Success(User(newUserId, email, preparedName))
+            Result.Success(User(newUserId, email, preparedName))
         } catch (e: Exception) {
             Log.e("supabase_register", e.toString())
             when {
-                e.message.toString().contains("User already registered") -> AuthResult.Error("Email")
-                else -> AuthResult.Error("General")
+                e.message.toString().contains("User already registered") -> Result.Error("Email")
+                else -> Result.Error("General")
             }
         }
     }
 
-    override suspend fun logout(): AuthResult<Unit> {
+    override suspend fun logout(): Result<Unit> {
         return try {
             Log.w("supabase_logout", "Before getting currSession")
             val currSession = supabaseClient.auth.currentSessionOrNull()
@@ -141,13 +140,13 @@ class AuthRepositoryImpl(
                 supabaseClient.auth.signOut(scope = SignOutScope.LOCAL)
                 Log.w("supabase_logout", currSession.toString())
             }
-            AuthResult.Success(Unit)
+            Result.Success(Unit)
         } catch (e: Exception) {
-            AuthResult.Error("Failed signing out")
+            Result.Error("Failed signing out")
         }
     }
 
-    override suspend fun getCurrentUserId(): AuthResult<Int> {
+    override suspend fun getCurrentUserId(): Result<Int> {
         return try {
             Log.w("supabase_getcurruserid", "Before getting id")
             val id = supabaseClient.postgrest
@@ -162,28 +161,28 @@ class AuthRepositoryImpl(
                 ?.get("user_id")
             Log.w("supabase_getcurruserid", "After getting id: $id")
             if (id == null) {
-                AuthResult.Error("Failed getting current user id")
+                Result.Error("Failed getting current user id")
             } else {
-                AuthResult.Success(id)
+                Result.Success(id)
             }
         } catch (e: Exception) {
             Log.e("supabase_getcurruserid", e.message.toString())
-            AuthResult.Error("Failed getting current user id")
+            Result.Error("Failed getting current user id")
         }
     }
 
-    override suspend fun isSessionActive(): AuthResult<Boolean> {
+    override suspend fun isSessionActive(): Result<Boolean> {
         return try {
             val isSessionActive = supabaseClient.auth.currentSessionOrNull()
             Log.w("supabase_issessionactive", (if (isSessionActive == null) false else true).toString())
-            AuthResult.Success(if (isSessionActive == null) false else true)
+            Result.Success(if (isSessionActive == null) false else true)
         } catch (e: Exception) {
             Log.e("supabase_issessionactive", e.message.toString())
-            AuthResult.Error("Error checking active session")
+            Result.Error("Error checking active session")
         }
     }
 
-    override suspend fun getCurrentUser(): AuthResult<UserProfile> {
+    override suspend fun getCurrentUser(): Result<UserProfile> {
         return try {
             Log.w("supabase_getcurruser", "Before getting id")
             val profile = supabaseClient.postgrest
@@ -195,10 +194,10 @@ class AuthRepositoryImpl(
                 }
                 .decodeSingle<UserProfile>()
             Log.w("supabase_getcurruser", "After getting user profile. User name - ${profile.userName}")
-            AuthResult.Success(profile)
+            Result.Success(profile)
         } catch (e: Exception) {
             Log.e("supabase_getcurruser", e.message.toString())
-            AuthResult.Error("Failed getting current user")
+            Result.Error("Failed getting current user")
         }
     }
 

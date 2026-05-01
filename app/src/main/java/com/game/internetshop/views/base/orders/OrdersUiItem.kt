@@ -1,4 +1,4 @@
-package com.game.internetshop.views.orders
+package com.game.internetshop.views.base.orders
 
 import com.game.internetshop.data.model.Order
 import com.game.internetshop.data.model.Product

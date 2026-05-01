@@ -1,4 +1,4 @@
-package com.game.internetshop.views.customBottomNavigationView
+package com.game.internetshop.views.extra.customBottomNavigationView
 
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView

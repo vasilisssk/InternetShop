@@ -1,4 +1,4 @@
-package com.game.internetshop.views.settings
+package com.game.internetshop.views.base.settings
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.game.internetshop.R
 import com.game.internetshop.databinding.FragmentSettingsBinding
 import com.game.internetshop.viewmodels.SettingsViewModel
-import com.game.internetshop.views.registration.RegistrationActivity
+import com.game.internetshop.views.base.registration.RegistrationActivity
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import utils.Utils

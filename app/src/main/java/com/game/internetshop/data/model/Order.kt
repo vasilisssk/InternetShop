@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Order (
+    @SerialName("order_id")
+    val orderId: Int? = null,
     @SerialName("registration_date")
     val registrationDate: LocalDateTime,
     @SerialName("total_price")

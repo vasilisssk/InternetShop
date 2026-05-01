@@ -1,4 +1,4 @@
-package com.game.internetshop.views.customBottomNavigationView
+package com.game.internetshop.views.extra.customBottomNavigationView
 
 class BottomNavigationSectionBuilder {
     private var _id: String = ""

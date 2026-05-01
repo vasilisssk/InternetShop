@@ -1,4 +1,4 @@
-package com.game.internetshop.views.orders
+package com.game.internetshop.views.base.orders
 
 import android.view.LayoutInflater
 import android.view.View

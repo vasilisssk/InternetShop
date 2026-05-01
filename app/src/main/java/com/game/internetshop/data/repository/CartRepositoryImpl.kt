@@ -1,9 +1,8 @@
 package com.game.internetshop.data.repository
 
 import android.util.Log
-import com.game.internetshop.data.model.CartResult
+import com.game.internetshop.data.common.Result
 import com.game.internetshop.data.model.ProductInCart
-import com.game.internetshop.data.model.ProductResult
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
@@ -13,15 +12,12 @@ class CartRepositoryImpl(
     private val productRepository: ProductRepository
 ) : CartRepository {
 
-    // заглушка, пусть id пользователя не учитывается <productId, quantity>
-    private val cartItems = mutableMapOf<Int, Int>()
-
-    override suspend fun addToCart(userId: Int, productId: Int): CartResult<Unit> {
+    override suspend fun addToCart(userId: Int, productId: Int): Result<Unit> {
         return try {
             // Проверяем существует ли продукт
             Log.w("supabase_addtocart", "Start adding to cart")
-            val productResult = productRepository.getProductById(productId)
-            if (productResult is ProductResult.Success) {
+            val result = productRepository.getProductById(productId)
+            if (result is Result.Success) {
                 Log.w("supabase_addtocart", "Before working with cart items")
                 val quantity = getProductQuantityInCart(userId, productId)
                 Log.w("supabase_addtocart", "After getting quantity: $quantity")
@@ -29,7 +25,7 @@ class CartRepositoryImpl(
                 val addition_price = getProductPrice(productId)
 
                 if (addition_price == null) {
-                    return CartResult.Error("Failed adding to cart")
+                    return Result.Error("Failed adding to cart")
                 }
                 Log.w("supabase_addtocart", "After getting price: $addition_price")
 
@@ -50,24 +46,24 @@ class CartRepositoryImpl(
                     }
                 }
 
-                CartResult.Success(Unit)
+                Result.Success(Unit)
             } else {
-                CartResult.Error("Failed adding to cart")
+                Result.Error("Failed adding to cart")
             }
         } catch (e: Exception) {
             Log.e("supabse_addtocart", e.message.toString())
-            CartResult.Error("Failed adding to cart")
+            Result.Error("Failed adding to cart")
         }
     }
 
-    override suspend fun removeFromCart(userId: Int, productId: Int, removeAll: Boolean): CartResult<Unit> {
+    override suspend fun removeFromCart(userId: Int, productId: Int, removeAll: Boolean): Result<Unit> {
         return try {
             Log.w("supabase_removefromcart","Start removing from cart")
             val quantity = getProductQuantityInCart(userId, productId) // никогда не будет 0
 
             val addition_price = getProductPrice(productId)
             if (addition_price == null) {
-                return CartResult.Error("Failed removing from cart")
+                return Result.Error("Failed removing from cart")
             }
             Log.w("supabase_addtocart", "After getting price: $addition_price")
 
@@ -87,24 +83,24 @@ class CartRepositoryImpl(
                 changeQuantityInCart(userId, productId, quantity, addition_price, -1)
                 Log.w("supabase_removefromcart","After updating(-1) existing product")
             }
-            CartResult.Success(Unit)
+            Result.Success(Unit)
         } catch (e: Exception) {
             Log.e("supabase_removefromcart",e.message.toString())
-            CartResult.Error("Failed removing from cart")
+            Result.Error("Failed removing from cart")
         }
     }
 
-    override suspend fun getCartItems(userId: Int): CartResult<List<ProductInCart>> {
+    override suspend fun getCartItems(userId: Int): Result<List<ProductInCart>> {
         return try {
             val userProductsInCart = getAllUserProducts(userId)
-            CartResult.Success(userProductsInCart)
+            Result.Success(userProductsInCart)
         } catch (e: Exception) {
             Log.e("supabase_getcartitems",e.message.toString())
-            CartResult.Error("Failed getting cart items")
+            Result.Error("Failed getting cart items")
         }
     }
 
-    override suspend fun clearCart(userId: Int): CartResult<Unit> {
+    override suspend fun clearCart(userId: Int): Result<Unit> {
         return try {
             Log.w("supabase_clearcart", "Start clearing cart")
             supabaseClient.postgrest
@@ -115,10 +111,10 @@ class CartRepositoryImpl(
                     }
                 }
             Log.w("supabase_clearcart", "After clearing cart")
-            CartResult.Success(Unit)
+            Result.Success(Unit)
         } catch (e: Exception) {
             Log.e("supabase_clearcart", e.message.toString())
-            CartResult.Error("Failed clearing cart")
+            Result.Error("Failed clearing cart")
         }
     }
 
