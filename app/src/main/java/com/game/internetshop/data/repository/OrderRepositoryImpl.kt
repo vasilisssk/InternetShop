@@ -2,18 +2,15 @@ package com.game.internetshop.data.repository
 
 import android.util.Log
 import com.game.internetshop.data.model.Order
-import com.game.internetshop.data.model.OrderOnlyRead
-import com.game.internetshop.data.model.OrderResult
 import com.game.internetshop.data.model.ProductInCart
 import com.game.internetshop.data.model.ProductInOrder
+import com.game.internetshop.data.common.Result
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 class OrderRepositoryImpl(
@@ -25,7 +22,7 @@ class OrderRepositoryImpl(
      * 2. Создать записи в product_in_order
      * 3. Удалить записи из product_in_cart
      */
-    override suspend fun createNewOrder(userId: Int, productsList: List<ProductInCart>, paymentVariant: Int): OrderResult<Order> {
+    override suspend fun createNewOrder(userId: Int, productsList: List<ProductInCart>, paymentVariant: Int): Result<Order> {
         return try {
             var totalPrice = 0f
             for (productInCart in productsList) {
@@ -58,7 +55,7 @@ class OrderRepositoryImpl(
             Log.w("supabse_createneworder", "1 After inserting and getting new order id: $insertedOrderId")
 
             if (insertedOrderId == null) {
-                return OrderResult.Error("Failed creating new order")
+                return Result.Error("Failed creating new order")
             }
 
             insertNewProductsInOrder(orderId = insertedOrderId, productsInCartList = productsList)
@@ -68,14 +65,14 @@ class OrderRepositoryImpl(
                 cartRepository.removeFromCart(userId, productInCart.productId, removeAll = true)
             }
             Log.e("supabse_createneworder", "3 After deleting products from cart. End")
-            OrderResult.Success(order)
+            Result.Success(order)
         } catch(e: Exception) {
             Log.e("supabse_createneworder", e.message.toString())
-            OrderResult.Error("Failed creating new order")
+            Result.Error("Failed creating new order")
         }
     }
 
-    override suspend fun getAllUserOrders(userId: Int): OrderResult<List<OrderOnlyRead>> {
+    override suspend fun getAllUserOrders(userId: Int): Result<List<Order>> {
         return try {
             Log.w("supabase_getalluserorders", "Start")
             val ordersList = supabaseClient.postgrest
@@ -85,17 +82,17 @@ class OrderRepositoryImpl(
                         eq("user_id", userId)
                     }
                 }
-                .decodeList<OrderOnlyRead>()
+                .decodeList<Order>()
             Log.w("supabase_getalluserorders", "After sql query: ${ordersList.size}")
-            OrderResult.Success(ordersList)
+            Result.Success(ordersList)
         } catch (e: Exception) {
             Log.e("supabase_getalluserorders", e.message.toString())
-            OrderResult.Error("Failed getting all user orders")
+            Result.Error("Failed getting all user orders")
         }
     }
 
     // для фрагмента с заказами
-    override suspend fun getAllProductsInOrder(orderId: Int): OrderResult<List<ProductInOrder>> {
+    override suspend fun getAllProductsInOrder(orderId: Int): Result<List<ProductInOrder>> {
         return try {
             Log.w("supabase_getallproductsinorder", "Start")
             val productsInOrderList = supabaseClient.postgrest
@@ -106,10 +103,10 @@ class OrderRepositoryImpl(
                     }
                 }.decodeList<ProductInOrder>()
             Log.w("supabase_getallproductsinorder", "After getting all products in order: ${productsInOrderList.size}")
-            OrderResult.Success(productsInOrderList)
+            Result.Success(productsInOrderList)
         } catch (e: Exception) {
             Log.e("supabase_getallproductsinorder", e.message.toString())
-            OrderResult.Error("Failed getting all products in order")
+            Result.Error("Failed getting all products in order")
         }
     }
 

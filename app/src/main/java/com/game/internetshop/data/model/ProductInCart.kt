@@ -13,8 +13,4 @@ data class ProductInCart(
     val quantity: Int,
     @SerialName("addition_price")
     val additionPrice: Float
-) {
-    fun totalSum(): Float {
-        return additionPrice * quantity
-    }
-}
+)
