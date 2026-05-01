@@ -5,6 +5,7 @@ import com.game.internetshop.data.model.Order
 import com.game.internetshop.data.model.ProductInCart
 import com.game.internetshop.data.model.ProductInOrder
 import com.game.internetshop.data.common.Result
+import com.game.internetshop.data.model.OrderInsert
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
@@ -22,7 +23,7 @@ class OrderRepositoryImpl(
      * 2. Создать записи в product_in_order
      * 3. Удалить записи из product_in_cart
      */
-    override suspend fun createNewOrder(userId: Int, productsList: List<ProductInCart>, paymentVariant: Int): Result<Order> {
+    override suspend fun createNewOrder(userId: Int, productsList: List<ProductInCart>, paymentVariant: Int): Result<OrderInsert> {
         return try {
             var totalPrice = 0f
             for (productInCart in productsList) {
@@ -43,7 +44,13 @@ class OrderRepositoryImpl(
                 nanosecond = 0
             )
 
-            val order = Order(registrationDate = localDateTimeWithoutNanos, totalPrice = totalPrice, userId = userId, statusId = 1, paymentId = paymentVariant)
+            val order = OrderInsert(
+                registrationDate = localDateTimeWithoutNanos,
+                totalPrice = totalPrice,
+                userId = userId,
+                statusId = 1,
+                paymentId = paymentVariant
+            )
             val insertedOrderId = supabaseClient.postgrest
                 .from("orders")
                 .insert(order) {

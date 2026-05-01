@@ -8,7 +8,7 @@
     <fragment
         app:route="catalogue"
         android:id="@+id/catalogueFragment"
-        android:name="com.game.internetshop.views.catalogue.CatalogueFragment"
+        android:name="com.game.internetshop.views.base.catalogue.CatalogueFragment"
         android:label="Catalogue"
         tools:layout="@layout/fragment_catalogue">
     </fragment>
@@ -16,7 +16,7 @@
     <fragment
         app:route="cart"
         android:id="@+id/cartFragment"
-        android:name="com.game.internetshop.views.cart.CartFragment"
+        android:name="com.game.internetshop.views.base.cart.CartFragment"
         android:label="Cart"
         tools:layout="@layout/fragment_cart">
     </fragment>
@@ -24,7 +24,7 @@
     <fragment
         app:route="orders"
         android:id="@+id/ordersFragment"
-        android:name="com.game.internetshop.views.orders.OrdersFragment"
+        android:name="com.game.internetshop.views.base.orders.OrdersFragment"
         android:label="Orders"
         tools:layout="@layout/fragment_orders">
     </fragment>
@@ -32,7 +32,7 @@
     <fragment
             app:route="settings"
             android:id="@+id/settingsFragment"
-            android:name="com.game.internetshop.views.settings.SettingsFragment"
+            android:name="com.game.internetshop.views.base.settings.SettingsFragment"
             android:label="Settings"
             tools:layout="@layout/fragment_settings">
     </fragment>
