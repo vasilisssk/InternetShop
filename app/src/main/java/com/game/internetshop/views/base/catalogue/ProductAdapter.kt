@@ -42,7 +42,14 @@ class ProductAdapter(
             val product: Product = catalogueUiItem.product
             val quantityInCart: Int = catalogueUiItem.quantityInCart
 
-            ivProductImage.setImageResource(R.drawable.ic_product)
+            val imageRes = when (product.name) {
+                "Galaxy S23 Ultra" -> R.drawable.img_s23
+                "MacBook Air M2" -> R.drawable.img_air_m2
+                "ThinkPad X1 Carbon" -> R.drawable.img_air_m2
+                "PlayStation 5" -> R.drawable.img_pc5
+                else -> R.drawable.ic_product
+            }
+            ivProductImage.setImageResource(imageRes)
             tvProductName.text = catalogueUiItem.product.name
             tvCounter.text = quantityInCart.toString()
             tvPrice.text = "${itemView.context.getString(R.string.price)}: ${String.format("%.2f", catalogueUiItem.product.price)} ₽"
