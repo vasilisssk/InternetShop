@@ -6,4 +6,4 @@
 
 [Презентация](coursework/Kursovaya_po_distsipline_Razrabotka_Mobilnykh_Prilozheniy.pdf)
 
-[Видео](coursework/Интернет Магазин демо-видео.mp4)
+[Видео](coursework/demovid.mp4)
