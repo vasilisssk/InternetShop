@@ -1,11 +1,9 @@
 Проект для курса мобильной разработки. Apk-файл находится в **Realeses**!
 
 Файлы по курсовой:
-[Текст курсовой]
-(coursework/Kursovaya_po_distsipline_Razrabotka_Mobilnykh_Prilozheniy.pdf)
 
-[Презентация]
-(coursework/Kursovaya_po_distsipline_Razrabotka_Mobilnykh_Prilozheniy.pdf)
+[Текст курсовой](coursework/Kursovaya_po_distsipline_Razrabotka_Mobilnykh_Prilozheniy.pdf)
 
-[Видео]
-(coursework/Интернет Магазин демо-видео.mp4)
+[Презентация](coursework/Kursovaya_po_distsipline_Razrabotka_Mobilnykh_Prilozheniy.pdf)
+
+[Видео](coursework/Интернет Магазин демо-видео.mp4)
